@@ -155,16 +155,16 @@ func (collection *Collection) Read(start, end *node, length int) []Point {
 	currnode := start
 	if start == nil || end == nil {
 		return nil
-	} else if start == end || length == 1 {
-		result := make([]Point, length)
-		result[0] = Point{Value: start.Value, Time: start.Time}
-		return result
-	} else{
+	} else {
 		// Build response
 		result := make([]Point, length)
-		for i := 0; currnode != end; i++ {
+		for i := 0; i < length; i++ {
 			result[i] = Point{Value: currnode.Value, Time: currnode.Time}
-			currnode = currnode.Next
+			if currnode == end {
+				break
+			} else {
+				currnode = currnode.Next
+			}
 		}
 		return result
 	}
