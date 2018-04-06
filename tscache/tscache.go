@@ -145,27 +145,23 @@ type Point struct {
 
 // Can i return [length]Point ?
 func (collection *Collection) Read(start, end *node, length int) []Point {
-	if length == 0 {
-		return []Point{}
+	if length == 0 || start == nil || end == nil {
+		return nil
 	}
 	// Aquire Lock
 	collection.mutex.Lock()
 	defer collection.mutex.Unlock()
 	// I guess this is redundant, but what else would i call "start" ?
 	currnode := start
-	if start == nil || end == nil {
-		return nil
-	} else {
-		// Build response
-		result := make([]Point, length)
-		for i := 0; i < length; i++ {
-			result[i] = Point{Value: currnode.Value, Time: currnode.Time}
-			if currnode == end {
-				break
-			} else {
-				currnode = currnode.Next
-			}
+	// Build response
+	result := make([]Point, length)
+	for i := 0; i < length; i++ {
+		result[i] = Point{Value: currnode.Value, Time: currnode.Time}
+		if currnode == end{
+			break
+		} else{
+			currnode = currnode.Next
 		}
-		return result
 	}
+	return result
 }
