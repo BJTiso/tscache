@@ -153,11 +153,19 @@ func (collection *Collection) Read(start, end *node, length int) []Point {
 	defer collection.mutex.Unlock()
 	// I guess this is redundant, but what else would i call "start" ?
 	currnode := start
-	// Build response
-	result := make([]Point, length)
-	for i := 0; currnode != end.Next; i++ {
-		result[i] = Point{Value: currnode.Value, Time: currnode.Time}
-		currnode = currnode.Next
+	if start == nil || end == nil {
+		return nil
+	} else if start == end || length == 1 {
+		result := make([]Point, length)
+		result[0] = Point{Value: start.Value, Time: start.Time}
+		return result
+	} else{
+		// Build response
+		result := make([]Point, length)
+		for i := 0; currnode != end; i++ {
+			result[i] = Point{Value: currnode.Value, Time: currnode.Time}
+			currnode = currnode.Next
+		}
+		return result
 	}
-	return result
 }
